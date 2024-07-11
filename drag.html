@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Image</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            flex-direction: column;
+            background-size: 400% 400%;
+            animation: changeBackground 15s ease infinite alternate;
+        }
+
+        @keyframes changeBackground {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 0% 100%;
+            }
+        }
+
+        .container {
+            display: flex;
+            width: 50vw;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .list {
+            margin: 0;
+            padding: 20px;
+            width: 50%;
+            list-style-type: none;
+            background-color: #ffffff;
+            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .list li {
+            padding: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .list li img {
+            margin-left: 10px;
+        }
+
+        .list2 {
+            margin: 0;
+            padding: 20px;
+            width: 50%;
+            list-style-type: none;
+            background-color: #ffffff;
+            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .list2 li {
+            padding: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .list2 li img {
+            margin-left: 10px;
+        }
+
+        .image-picker {
+            padding: 20px;
+            width: 50%;
+            text-align: center;
+            position: relative;
+            background-color: #ffffff;
+            display: grid;
+            align-content: center;
+        }
+
+        .image-picker img {
+            max-width: 100%;
+            max-height: 200px;
+            transition: opacity 0.5s ease-in-out;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .random-button {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .random-button.disabled {
+            background-color: #6c757d;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .random-button:hover:not(.disabled) {
+            background-color: #0056b3;
+        }
+
+        .cover {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .cover img {
+            max-width: 100%;
+            height: 50vh;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cover" id="cover" style="opacity: 1;">
+        <img src="file:///C:/Users/nadim/Downloads/screenshot-1711983872467.png" alt="Cover Image"
+            onclick="startGame()">
+    </div>
+
+    <div class="container" id="mainContainer" style="opacity: 0; display: none;">
+        <ul class="list" id="list">
+        </ul>
+        <div class="image-picker" id="image-picker" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <button class="random-button" onclick="animateRandomImage()" id="randomButton">Start</button>
+            <div id="image-container">
+                <img id="drag1" src="" draggable="true" ondragstart="drag(event)" alt="Draggable Image"
+                    onclick="resetImage()">
+            </div>
+        </div>
+        <!----><ul class="list2" id="list2">
+        </ul>
+    </div>
+
+    <script>
+        // Data
+        var imageLinks = 
+        [   
+'https://cdn.myanimelist.net/images/characters/2/284121.webp?s=58b3ec8dd78f4b9e50c7603833ca62c3', 
+'https://cdn.myanimelist.net/images/characters/14/103647.jpg', 
+'https://cdn.myanimelist.net/images/characters/9/131317.webp?s=81ebaad59cc6e2cb9f73c1b31661ac94', 
+'https://cdn.myanimelist.net/images/characters/6/284123.jpg', 
+'https://cdn.myanimelist.net/images/characters/12/450359.webp?s=57ba00910bb8ec4c5f597a43b551c1ac', 
+'https://cdn.myanimelist.net/images/characters/10/293409.jpg', 
+'https://cdn.myanimelist.net/images/characters/8/278664.jpg', 
+'https://cdn.myanimelist.net/images/characters/8/73473.jpg', 
+'https://cdn.myanimelist.net/images/characters/14/337810.jpg', 
+'https://cdn.myanimelist.net/images/characters/16/103576.webp?s=256eba23fe2ff76182cc55c7bf3cd65c', 
+'https://cdn.myanimelist.net/images/characters/10/293744.jpg', 
+'https://cdn.myanimelist.net/images/characters/5/292976.webp?s=727575505bb9dcb8d495814dd2319c6a', 
+'https://cdn.myanimelist.net/images/characters/15/254419.webp?s=97481253f99479e99d779a47e1944d1e]', 
+'https://cdn.myanimelist.net/images/characters/9/69275.webp?s=931f3e0d62fdc1e6a1309d50a960c9b5', 
+'https://cdn.myanimelist.net/images/characters/3/131315.webp?s=de94caab62e3b6aa15b2da769b4b8df9', 
+'https://cdn.myanimelist.net/images/characters/15/68618.webp?s=93e3df719534580139372830626a9805', 
+'https://cdn.myanimelist.net/images/characters/6/278736.webp?s=66909a97c52823f9121b5c07a4bf8842', 
+'https://cdn.myanimelist.net/images/characters/5/104276.jpg', 
+'https://cdn.myanimelist.net/images/characters/12/523646.jpg', 
+'https://cdn.myanimelist.net/images/characters/16/292332.webp?s=c64049c61c02f0e494d64ea640916b37', 
+'https://cdn.myanimelist.net/images/characters/14/158761.webp?s=a7016aeac8d13f334b688be2958b8db6',
+'https://cdn.myanimelist.net/images/characters/2/293367.webp?s=0c6558557c0aa73dba441682fab6d1da', 
+'https://cdn.myanimelist.net/images/characters/9/60062.webp?s=83434e87ee631b32a371393ead54417c'
+]
+
+        var items = 
+        [
+'STRENGTH',
+'SPEED',
+'CHAKRA',
+'DURABILITY',
+'JUTSU',
+'TAIJUTSU',
+'IQ',
+'BATTLE IQ',
+'SUMMONING',
+'HEALING',
+'EYES'
+]
+
+        var currentImageIndex = 0;  // Keep track of the current image index
+
+        // Functions
+        function animateRandomImage() {
+            var button = document.getElementById('randomButton');
+            button.disabled = true; // Disable the button
+            button.classList.add('disabled'); // Change button color to indicate it's disabled
+
+            var images = [
+                ...Array(1).fill().flatMap(() => imageLinks.slice(0, 4)),
+                ...imageLinks.slice(4)
+            ];
+
+            images = shuffleArray(images);
+
+            var count = 0;
+            var interval = setInterval(function () {
+                var randomImage = images[Math.floor(Math.random() * images.length)];
+                document.getElementById("drag1").src = randomImage;
+                count++;
+                if (count >= 50) {
+                    clearInterval(interval);
+                    button.disabled = false; // Re-enable the button
+                    button.classList.remove('disabled'); // Change button color to indicate it's enabled
+                    //imageLinks.splice(imageLinks.indexOf(randomImage), 1);
+                }
+            }, 50);
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function getRandomLinearGradient() {
+            var colors = [getRandomColor(), getRandomColor()];
+            var gradient = `linear-gradient(to bottom, ${colors.join(', ')})`;
+            return gradient;
+        }
+
+        function changeBackgroundGradient() {
+            var gradient = getRandomLinearGradient();
+            document.body.style.backgroundImage = gradient;
+        }
+
+        window.onload = function () {
+            changeBackgroundGradient();
+            preloadImages();
+            startGame();
+        };
+
+        function preloadImages() {
+            imageLinks.forEach(imgSrc => {
+                var img = new Image();
+                img.src = imgSrc;
+            });
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var nodeCopy = document.getElementById(data).cloneNode(true);
+    nodeCopy.id = "newId";
+    ev.target.appendChild(nodeCopy);
+    var listFontSize = parseFloat(window.getComputedStyle(document.getElementById("list")).fontSize);
+    nodeCopy.style.width = "auto";
+    nodeCopy.style.height = (listFontSize * 1.25) + 'px';
+}
+
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startGame() {
+            var cover = document.querySelector('.cover');
+            var mainContainer = document.getElementById('mainContainer');
+
+            cover.style.opacity = '0';
+            setTimeout(() => {
+                cover.style.display = 'none';
+                mainContainer.style.display = 'flex';
+                setTimeout(() => {
+                    mainContainer.style.opacity = '1';
+                }, 50);
+            }, 500);
+        }
+
+        var list = document.getElementById("list");
+        items.forEach(item => {
+            var li = document.createElement("li");
+            li.textContent = item;
+            li.setAttribute("ondrop", "drop(event)");
+            li.setAttribute("ondragover", "allowDrop(event)");
+            list.appendChild(li);
+        });
+
+        // Set initial image
+        document.getElementById("drag1").src = imageLinks[currentImageIndex];
+
+        var list2 = document.getElementById("list2");
+        items.forEach(item => {
+            var li = document.createElement("li");
+            li.textContent = item;
+            li.setAttribute("ondrop", "drop(event)");
+            li.setAttribute("ondragover", "allowDrop(event)");
+            list2.appendChild(li);
+        });
+
+        // Reset to initial image
+        function resetImage() {
+            document.getElementById("drag1").src = imageLinks[currentImageIndex];
+        }
+
+    </script>
+
+</body>
+
+</html>
