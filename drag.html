@@ -30,8 +30,7 @@
         }
 
         .container {
-            display: flex;
-            width: 50vw;
+            width: 20vw;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -41,7 +40,6 @@
         .list {
             margin: 0;
             padding: 20px;
-            width: 50%;
             list-style-type: none;
             background-color: #ffffff;
             font-size: 20px;
@@ -62,7 +60,6 @@
 
         .image-picker {
             padding: 20px;
-            width: 50%;
             text-align: center;
             position: relative;
             background-color: #ffffff;
@@ -119,15 +116,15 @@
 <body>
 
     <div class="container" id="container">
-        <ul class="list" id="list">
-            <!-- List items will be dynamically added here -->
-        </ul>
         <div class="image-picker" id="image-picker">
             <button class="random-button" onclick="animateRandomImage()" id="randomButton">Start</button>
             <div id="image-container">
                 <img id="drag1" src="">
             </div>
         </div>
+        <ul class="list" id="list">
+            <!-- List items will be dynamically added here -->
+        </ul>
     </div>
 
     <script>
