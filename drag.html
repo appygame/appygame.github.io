@@ -13,24 +13,11 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f9f9f9;
-            flex-direction: column;
-            background-size: 400% 400%;
-            animation: changeBackground 15s ease infinite alternate;
-        }
-
-        @keyframes changeBackground {
-            0% {
-                background-position: 0% 0%;
-            }
-
-            100% {
-                background-position: 0% 100%;
-            }
         }
 
         .container {
             display: flex;
+            width: 50vw;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -122,8 +109,8 @@
             <!-- List items will be dynamically added here -->
         </ul>
         <div class="image-picker" id="image-picker">
-            <div id="image-container" onclick="animateRandomImage()">
-                <img id="drag1" src="">
+            <div id="image-container">
+                <img id="drag1" src="" onclick="animateRandomImage()">
             </div>
         </div>
     </div>
@@ -176,7 +163,7 @@
 
         // Functions
         function animateRandomImage() {
-            
+
             var images = shuffleArray(imageLinks);
             var count = 0;
             var animationDelay = Math.floor(Math.random() * (2000 - 1000)) + 1000; // Random delay between 1000 and 2000 milliseconds
@@ -213,7 +200,7 @@
             var img = document.createElement("img");
             img.src = src;
             img.style.width = "auto";
-            img.style.height = "20px";
+            img.style.height = "25px";
             return img;
         }
 
@@ -226,9 +213,24 @@
         }
 
         window.onload = function () {
+            changeBackgroundColor();
             preloadImages();
             startGame();
         };
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function changeBackgroundColor() {
+            var color = getRandomColor();
+            document.body.style.backgroundColor = color;
+        }
 
         function preloadImages() {
             imageLinks.forEach(function (imgSrc) {
