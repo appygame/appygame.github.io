@@ -7,8 +7,9 @@
     <title>Drag and Drop Image</title>
     <style>
         body {
-            margin: 20px;
+            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -29,6 +30,8 @@
         }
 
         .container {
+            display: flex;
+            width: 50vw;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -38,6 +41,7 @@
         .list {
             margin: 0;
             padding: 20px;
+            width: 50%;
             list-style-type: none;
             background-color: #ffffff;
             font-size: 20px;
@@ -58,6 +62,7 @@
 
         .image-picker {
             padding: 20px;
+            width: 50%;
             text-align: center;
             position: relative;
             background-color: #ffffff;
@@ -76,8 +81,8 @@
             margin-bottom: 20px;
             padding: 10px 20px;
             cursor: pointer;
-            background-color: #007bff00;
-            color: #ffffff00;
+            background-color: #007bff;
+            color: #fff;
             border: none;
             border-radius: 5px;
             font-size: 16px;
@@ -112,18 +117,16 @@
 </head>
 
 <body>
-    
-<button class="random-button" onclick="animateRandomImage()" id="randomButton">Start</button>        
+
     <div class="container" id="container">
-        <div class="image-picker" id="image-picker">
-            <button class="random-button" onclick="animateRandomImage()" id="randomButton">Start</button>
-            <div id="image-container">
-                <img id="drag1" src="">
-            </div>
-        </div>
         <ul class="list" id="list">
             <!-- List items will be dynamically added here -->
         </ul>
+        <div class="image-picker" id="image-picker">
+            <div id="image-container" onclick="animateRandomImage()">
+                <img id="drag1" src="">
+            </div>
+        </div>
     </div>
 
     <script>
@@ -162,6 +165,9 @@
             'JUTSU',
             'TAIJUTSU',
             'IQ',
+            'BATTLE IQ',
+            'SUMMONING',
+            'HEALING',
             'EYES'
         ];
 
@@ -171,10 +177,7 @@
 
         // Functions
         function animateRandomImage() {
-            var button = document.getElementById('randomButton');
-            button.disabled = true; // Disable the button
-            button.classList.add('disabled'); // Change button color to indicate it's disabled
-
+            
             var images = shuffleArray(imageLinks);
             var count = 0;
             var animationDelay = Math.floor(Math.random() * (2000 - 1000)) + 1000; // Random delay between 1000 and 2000 milliseconds
@@ -184,8 +187,6 @@
                 count++;
                 if (count >= 50) {
                     clearInterval(interval);
-                    button.disabled = false; // Re-enable the button
-                    button.classList.remove('disabled'); // Change button color to indicate it's enabled
                     //imageLinks.splice(imageLinks.indexOf(randomImage), 1); //menghapus selected image
                     setTimeout(function () {
                         placeNextImageInList(randomImage); // Place the selected image in the list in a random order
@@ -208,12 +209,12 @@
             return array;
         }
 
+
         function createImageElement(src) {
             var img = document.createElement("img");
             img.src = src;
-            var listFontSize = parseFloat(window.getComputedStyle(document.getElementById("list")).fontSize);
             img.style.width = "auto";
-            img.style.height = (listFontSize * 0.99) + 'px';
+            img.style.height = "25px";
             return img;
         }
 
