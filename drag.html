@@ -220,7 +220,7 @@
             img.src = src;
             var listFontSize = parseFloat(window.getComputedStyle(document.getElementById("list")).fontSize);
             img.style.width = "auto";
-            img.style.height = listFontSize + 'px';
+            img.style.height = (listFontSize * 0.95) + 'px';
             return img;
         }
 
