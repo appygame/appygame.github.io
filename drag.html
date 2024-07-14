@@ -170,7 +170,7 @@
                 var randomImage = images[Math.floor(Math.random() * images.length)];
                 document.getElementById("drag1").src = randomImage; // Update the displayed image
                 count++;
-                if (count >= 50) {
+                if (count >= 30) {
                     clearInterval(interval);
                     //imageLinks.splice(imageLinks.indexOf(randomImage), 1); //menghapus selected image
                     setTimeout(function () {
