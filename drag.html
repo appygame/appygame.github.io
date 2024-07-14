@@ -218,8 +218,9 @@
         function createImageElement(src) {
             var img = document.createElement("img");
             img.src = src;
+            var listFontSize = parseFloat(window.getComputedStyle(document.getElementById("list")).fontSize);
             img.style.width = "auto";
-            img.style.height = "25px";
+            img.style.height = (listFontSize * 1.2) + 'px';
             return img;
         }
 
