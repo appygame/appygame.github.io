@@ -204,8 +204,9 @@
         function placeNextImageInList(imgSrc) {
             var listItems = document.querySelectorAll("#list li");
             if (currentImageIndex < items.length) {
-                var randomIndex = shuffledIndexes[currentImageIndex];
-                listItems[randomIndex].appendChild(createImageElement(imgSrc));
+                //var randomIndex = shuffledIndexes[currentImageIndex];
+                //listItems[randomIndex].appendChild(createImageElement(imgSrc));
+                listItems[currentImageIndex].appendChild(createImageElement(imgSrc)); // Append the selected image
             }
         }
 
